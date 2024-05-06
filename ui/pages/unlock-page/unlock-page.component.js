@@ -13,6 +13,7 @@ import {
 import { SUPPORT_LINK } from '../../../shared/lib/ui-utils';
 import { isBeta } from '../../helpers/utils/build-types';
 import { getCaretCoordinates } from './unlock-page.util';
+import VaultSelector from './vault-selector';
 
 export default class UnlockPage extends Component {
   static contextTypes = {
@@ -124,6 +125,11 @@ export default class UnlockPage extends Component {
     }
   }
 
+  // WIP: Function to handle the vault file we've selected:
+processSelectedFile = (fileContents) => {
+  // TODO: Link this up with, perhaps, the restore flow
+};
+
   renderSubmitButton() {
     const style = {
       backgroundColor: 'var(--color-primary-default)',
@@ -204,6 +210,10 @@ export default class UnlockPage extends Component {
               {t('forgotPassword')}
             </Button>
           </div>
+          <VaultSelector
+          buttonText={this.context.t('loadVaultFile')}
+          onFileSelected={this.processSelectedFile}
+        />
           <div className="unlock-page__support">
             {t('needHelp', [
               <a
