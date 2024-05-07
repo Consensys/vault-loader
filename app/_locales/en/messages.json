@@ -6120,5 +6120,8 @@
   },
   "zeroGasPriceOnSpeedUpError": {
     "message": "Zero gas price on speed up"
+  },
+  "loadVaultFile": {
+    "message": "Choose and load a vault"
   }
 }

@@ -14,6 +14,7 @@ import { SUPPORT_LINK } from '../../../shared/lib/ui-utils';
 import { isBeta } from '../../helpers/utils/build-types';
 import { getCaretCoordinates } from './unlock-page.util';
 import VaultSelector from './vault-selector';
+console.log({ Button, VaultSelector })
 
 export default class UnlockPage extends Component {
   static contextTypes = {
@@ -162,6 +163,8 @@ processSelectedFile = (fileContents) => {
     const { onRestore } = this.props;
 
     let needHelpText = t('appNameMmi');
+    console.log('Rendering UnlockPage, state:', this.state);
+    console.log('i18n context:', this.context);
 
     ///: BEGIN:ONLY_INCLUDE_IF(build-main,build-beta,build-flask)
     needHelpText = t('needHelpLinkText');
