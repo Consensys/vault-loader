@@ -7,7 +7,6 @@ class VaultSelector extends React.Component {
       const [fileHandle] = await window.showOpenFilePicker();
       const file = await fileHandle.getFile();
       const contents = await file.text();
-      // Process the contents of the file here, or call a prop method passed down from the parent
       this.props.onFileSelected(contents);
     } catch (error) {
       console.error('Error selecting file:', error);

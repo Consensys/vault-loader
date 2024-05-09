@@ -13,7 +13,7 @@ import {
 import { SUPPORT_LINK } from '../../../shared/lib/ui-utils';
 import { isBeta } from '../../helpers/utils/build-types';
 import { getCaretCoordinates } from './unlock-page.util';
-import VaultSelector from './vault-selector';
+import VaultSelector from '../vault-selector/vault-selector';
 console.log({ Button, VaultSelector })
 
 export default class UnlockPage extends Component {
@@ -48,6 +48,7 @@ export default class UnlockPage extends Component {
   state = {
     password: '',
     error: null,
+    selectedVaultFileName: '',
   };
 
   submitting = false;
@@ -127,9 +128,11 @@ export default class UnlockPage extends Component {
   }
 
   // WIP: Function to handle the vault file we've selected:
-processSelectedFile = (fileContents) => {
-  // TODO: Link this up with, perhaps, the restore flow
-};
+  processSelectedFile = (contents, fileName) => {
+    console.log('File selected:', file.name);
+    // update state with contents and name of vault file
+    this.setState({ selectedVaultFileName: fileName });
+  };
 
   renderSubmitButton() {
     const style = {
@@ -214,9 +217,9 @@ processSelectedFile = (fileContents) => {
             </Button>
           </div>
           <VaultSelector
-          buttonText={this.context.t('loadVaultFile')}
-          onFileSelected={this.processSelectedFile}
-        />
+            buttonText={this.state.selectedVaultFileName ? `Vault file: ${this.state.selectedVaultFileName}` : this.context.t('loadVaultFile')}
+            onFileSelected={this.processSelectedFile}
+          />
           <div className="unlock-page__support">
             {t('needHelp', [
               <a
