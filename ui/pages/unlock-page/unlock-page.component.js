@@ -49,6 +49,7 @@ export default class UnlockPage extends Component {
     password: '',
     error: null,
     selectedVaultFileName: '',
+    vaultFileContents: '', //Is this acceptable from a security perspective?
   };
 
   submitting = false;
@@ -129,9 +130,13 @@ export default class UnlockPage extends Component {
 
   // WIP: Function to handle the vault file we've selected:
   processSelectedFile = (contents, fileName) => {
-    console.log('File selected:', file.name);
-    // update state with contents and name of vault file
-    this.setState({ selectedVaultFileName: fileName });
+    console.log('File selected:', fileName);
+    // update state with contents and name of vault file. Again, security questions abound
+    this.setState({
+      selectedVaultFileName: fileName,
+      vaultFileContents: contents,
+    })
+
   };
 
   renderSubmitButton() {
