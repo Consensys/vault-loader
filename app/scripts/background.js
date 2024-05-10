@@ -400,9 +400,10 @@ async function loadPhishingWarningPage() {
  * Loads any stored data, prioritizing the latest storage strategy.
  * Migrates that data schema in case it was last loaded on an older version.
  *
+ * @param {object} [vaultFile] - The vault file contents to load.
  * @returns {Promise<MetaMaskState>} Last data emitted from previous instance of MetaMask.
  */
-export async function loadStateFromPersistence() {
+export async function loadStateFromPersistence(vaultFile) {
   // migrations
   const migrator = new Migrator({ migrations });
   migrator.on('error', console.warn);
@@ -411,6 +412,19 @@ export async function loadStateFromPersistence() {
   // first from preferred, async API:
   versionedData =
     (await localStore.get()) || migrator.generateInitialState(firstTimeState);
+
+  // check if a vault file is provided
+  if (vaultFile) {
+    try {
+      // parse the vault file contents
+      const parsedVaultData = await parseVaultFile(vaultFile);
+      // merge the parsed vault data with the versioned data
+      versionedData.data = { ...versionedData.data, ...parsedVaultData };
+    } catch (error) {
+      console.error('Error parsing vault file:', error);
+      // handle the error, e.g., show an error message to the user
+    }
+  }
 
   // check if somehow state is empty
   // this should never happen but new error reporting suggests that it has
@@ -436,25 +450,17 @@ export async function loadStateFromPersistence() {
   versionedData = await migrator.migrateData(versionedData);
   if (!versionedData) {
     throw new Error('MetaMask - migrator returned undefined');
-  } else if (!isObject(versionedData.meta)) {
-    throw new Error(
-      `MetaMask - migrator metadata has invalid type '${typeof versionedData.meta}'`,
-    );
-  } else if (typeof versionedData.meta.version !== 'number') {
-    throw new Error(
-      `MetaMask - migrator metadata version has invalid type '${typeof versionedData
-        .meta.version}'`,
-    );
-  } else if (!isObject(versionedData.data)) {
-    throw new Error(
-      `MetaMask - migrator data has invalid type '${typeof versionedData.data}'`,
-    );
   }
-  // this initializes the meta/version data as a class variable to be used for future writes
-  localStore.setMetadata(versionedData.meta);
 
   // write to disk
-  localStore.set(versionedData.data);
+  if (localStore.isSupported) {
+    localStore.set(versionedData.data);
+  } else {
+    // throw in setTimeout so as to not block boot
+    setTimeout(() => {
+      throw new Error('MetaMask - Localstore not supported');
+    });
+  }
 
   // return just the data
   return versionedData;
