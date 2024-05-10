@@ -128,8 +128,7 @@ export default class UnlockPage extends Component {
     }
   }
 
-  // WIP: Function to handle the vault file we've selected:
-  //
+  // Function to handle the vault file we've selected:
   processSelectedFile = (contents, fileName) => {
     console.log('File selected:', fileName);
     // Update the state with the vault file contents and file name
@@ -139,7 +138,6 @@ export default class UnlockPage extends Component {
     });
   };
  //
-//end vault processing function
 
   renderSubmitButton() {
     const style = {

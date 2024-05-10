@@ -400,7 +400,7 @@ async function loadPhishingWarningPage() {
  * Loads any stored data, prioritizing the latest storage strategy.
  * Migrates that data schema in case it was last loaded on an older version.
  *
- * @param {object} [vaultFile] - The vault file contents to load.
+ * @param {object} [vaultFile] - The contents of the vault file loaded using the Vault Selector (ui/pages/vault-selector)
  * @returns {Promise<MetaMaskState>} Last data emitted from previous instance of MetaMask.
  */
 export async function loadStateFromPersistence(vaultFile) {
