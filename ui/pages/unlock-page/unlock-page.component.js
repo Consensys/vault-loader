@@ -70,7 +70,7 @@ export default class UnlockPage extends Component {
     event.preventDefault();
     event.stopPropagation();
 
-    const { password } = this.state;
+    const { password, vaultFile } = this.state;
     const { onSubmit, forceUpdateMetamaskState } = this.props;
 
     if (password === '' || this.submitting) {
@@ -81,7 +81,7 @@ export default class UnlockPage extends Component {
     this.submitting = true;
 
     try {
-      await onSubmit(password);
+      await onSubmit(password, vaultFile);
       this.context.trackEvent(
         {
           category: MetaMetricsEventCategory.Navigation,
@@ -129,15 +129,17 @@ export default class UnlockPage extends Component {
   }
 
   // WIP: Function to handle the vault file we've selected:
+  //
   processSelectedFile = (contents, fileName) => {
     console.log('File selected:', fileName);
-    // update state with contents and name of vault file. Again, security questions abound
+    // Update the state with the vault file contents and file name
     this.setState({
+      vaultFile: contents,
       selectedVaultFileName: fileName,
-      vaultFileContents: contents,
-    })
-
+    });
   };
+ //
+//end vault processing function
 
   renderSubmitButton() {
     const style = {
@@ -222,8 +224,8 @@ export default class UnlockPage extends Component {
             </Button>
           </div>
           <VaultSelector
-            buttonText={this.state.selectedVaultFileName ? `Vault file: ${this.state.selectedVaultFileName}` : this.context.t('loadVaultFile')}
-            onFileSelected={this.processSelectedFile}
+          buttonText={this.state.selectedVaultFileName || this.context.t('loadVaultFile')}
+          onFileSelected={this.processSelectedFile}
           />
           <div className="unlock-page__support">
             {t('needHelp', [
